@@ -1,0 +1,707 @@
+//NAIVE BAYSIAN
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+
+
+df = pd.read_csv('covid aneeth.csv')
+df.head()
+
+
+df.describe()
+
+df.dtypes
+
+
+# Convert the `pc` column to integer datatype
+df['pc'] = df['pc'].replace({'Low': 0, 'Normal': 1, 'High': 2})
+df['pc'] = pd.to_numeric(df['pc'])
+
+# Print the updated dataset
+df.head()
+
+
+# Convert the `wbc` column to integer datatype
+df['wbc'] = df['wbc'].replace({'Low': 0, 'Normal': 1, 'High': 2})
+df['wbc'] = pd.to_numeric(df['wbc'])
+
+# Print the updated dataset
+df.head()
+
+
+
+# Convert the `mc` column to integer datatype
+df['mc'] = df['mc'].replace({'Low': 0, 'Normal': 1, 'High': 2})
+df['mc'] = pd.to_numeric(df['mc'])
+
+# Print the updated dataset
+df.head()
+
+
+//SVM
+from sklearn.svm import SVC
+from sklearn import svm
+import numpy as np
+import pandas as pd
+data=pd.read_csv("datasets\glass(SVM Program).csv")
+data.head()
+x=data.drop("Type",axis=1)
+y=data.Type
+
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3)
+
+
+linear=svm.SVC(kernel="linear")
+linear.fit(x_train,y_train)
+
+print(linear.support_vectors_)
+
+
+
+print(linear.n_support_)
+y_pred=linear.predict(x_test)
+
+
+
+from sklearn.metrics import accuracy_score
+print(accuracy_score(y_test,y_pred))
+
+
+from sklearn.metrics import confusion_matrix
+print(confusion_matrix(y_test,y_pred))
+
+
+
+from sklearn.metrics import classification_report
+print(classification_report(y_test,y_pred))
+
+
+
+model1=SVC(kernel='sigmoid',gamma=0.76)
+model2=SVC(kernel='poly',degree=3)
+model3=SVC(kernel='rbf')
+
+
+
+model1.fit(x_train,y_train)
+model2.fit(x_train,y_train)
+model3.fit(x_train,y_train)
+
+
+y_pred1=model1.predict(x_test)
+y_pred2=model2.predict(x_test)
+y_pred3=model3.predict(x_test)
+
+
+
+print("prediction by model1",accuracy_score(y_test,y_pred1))
+print("prediction by model2",accuracy_score(y_test,y_pred2))
+print("prediction by model3",accuracy_score(y_test,y_pred3))
+
+
+
+print("Sigmoid:\n"+classification_report(y_test,y_pred1))
+print("Polynomial:\n"+classification_report(y_test,y_pred2))
+print("RBF:\n"+classification_report(y_test,y_pred3))
+
+
+//RANDOM FOREST
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import sys
+
+data = pd.read_csv('B22-aneeth .csv')
+
+data.head()
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import make_classification
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import StandardScaler, MinMaxScaler 
+#import pandas_profiling 
+from matplotlib  import rcParams
+import warnings
+
+data.columns
+
+
+X=data.drop("Outcome",axis=1)
+y=data["Outcome"]
+
+scaler=StandardScaler()
+X_scaled=scaler.fit_transform(X)
+
+X_train,X_test,Y_train,Y_test=train_test_split(X_scaled,y,stratify=y,test_size=0.10,random_state=34)
+
+
+classifier = RandomForestClassifier(n_estimators=100)
+classifier.fit(X_train,Y_train)
+
+
+y_pred = classifier.predict(X_test)
+
+
+print("Accuracy:",accuracy_score(Y_test,y_pred))
+
+
+feature_importances_df = pd.DataFrame(
+    {"feature":list(X.columns),"importance":classifier.feature_importances_}
+).sort_values("importance",ascending=False)
+
+feature_importances_df
+
+
+
+from sklearn.tree import DecisionTreeClassifier
+clf=DecisionTreeClassifier()
+clf.fit(X_train,Y_train)
+Y_pred = clf.predict(X_test)
+
+
+
+from sklearn.metrics import accuracy_score
+print("Accuracy-DecisionTree :",accuracy_score(Y_test,Y_pred))
+
+
+//MEAN MEDIAN MODE
+import numpy as np
+x=[115.3, 195.5, 120.5, 110.2, 90.4, 105.6, 110.9, 116.3, 122.3, 125.4,90.4]
+
+
+mean = sum(x) / len(x)
+
+mean
+
+import statistics
+
+print(statistics.mean(x))
+
+x.sort()
+# x = np.sort(x)
+
+
+x
+
+n=len(x)
+n
+
+
+
+if  n% 2 == 0:
+    median1 = x[n//2]
+    median2 = x[n//2 - 1]
+    median = (median1 + median2)/2
+else:
+    median = x[n//2]
+print("Median is: " + str(median))
+
+
+
+# print(statistics.median(x))
+np.median(x)
+
+
+
+frequency = {}
+for value in x:
+        frequency[value] = frequency.get(value, 0) + 1
+
+
+
+
+frequency
+
+
+
+
+frequencs=list(frequency.values())
+print(frequencs)
+
+
+most_frequent = np.max(frequencs)
+
+
+most_frequent
+
+
+
+modes = [key for key, value in frequency.items()
+                      if value == most_frequent]
+
+
+
+modes
+
+
+
+freq = {}
+for key in x:
+    freq[key] = freq.get(key, 0) + 1
+
+freqencs = list(freq.values())
+
+maxfr = np.max(freqencs)
+
+def mmm():
+    for i in range(len(x)):
+        if maxfr == freqencs[i]:
+            return x[i]
+
+mode = mmm()
+mode
+
+
+
+print(statistics.mode(x))
+
+
+
+variance = sum((i - mean) ** 2 for i in x) / (n-1)
+
+
+variance
+
+
+
+print(statistics.variance(x))
+
+
+
+standarddev= variance ** 0.5
+
+
+standarddev
+
+
+print(statistics.stdev(x))
+
+
+
+import numpy as np
+max = np.max(x)
+min = np.min(x)
+
+
+
+scaled_arr = list((i - min) / (max - min) for i in x)
+
+
+
+
+print(scaled_arr)
+
+
+
+x=[[-1, 2], [-0.5, 6], [0, 10], [1, 18]]
+
+
+
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+# transform data
+scaled = scaler.fit_transform(x)
+print(scaled)
+
+
+
+X=[115.3, 195.5, 120.5, 110.2, 90.4, 105.6, 110.9, 116.3, 122.3, 125.4,90.4]
+for i in range(len(X)):
+        X[i] = (X[i] - statistics.mean(X)) /(statistics.stdev(X))
+
+
+X=[115.3, 195.5, 120.5, 110.2, 90.4, 105.6, 110.9, 116.3, 122.3, 125.4,90.4]
+
+
+
+
+stand_arr = np.array([(i -statistics.mean(X) ) / (statistics.stdev(X)) for i in X])
+
+
+
+stand_arr
+
+
+
+
+print(round(statistics.mean(stand_arr),2))
+
+
+
+
+from numpy import asarray
+from sklearn.preprocessing import StandardScaler
+# define data
+data = asarray([[100, 0.001],
+[8, 0.05],
+[50, 0.005],
+[88, 0.07],
+[4, 0.1]])
+print(data)
+# define standard scaler
+scaler = StandardScaler()
+# transform 
+
+scaled = scaler.fit_transform(data)
+print(scaled)
+
+
+
+
+
+print(round(np.mean(scaled),5))
+
+
+
+
+
+
+
+print(np.std(scaled))
+
+
+//DECISION TREE
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+
+data = pd.read_csv("zoo_data(For Decision Tree Program).csv")
+x = data.iloc[:, :-1]
+y = data.iloc[:, -1]
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(x, y)
+
+# Create and train the Decision Tree model
+model = DecisionTreeClassifier().fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+conf_matrix = confusion_matrix(y_test, y_pred)
+classification_rep = classification_report(y_test, y_pred, zero_division=0)
+
+# Display results
+print("Confusion Matrix:\n", conf_matrix)
+print("Classification Report:\n", classification_rep)
+
+# Visualize the Decision Tree
+plt.figure(figsize=(20, 15))
+plot_tree(model, filled=True)
+plt.show()
+
+//PCA
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Load the iris dataset
+data = pd.read_csv("pca prog.csv")
+
+# Extract features and target variable
+X = data.iloc[:, :-1].values
+y = data.iloc[:, -1].values
+
+std = (X - X.mean()) / X.std()
+matrix = np.cov(std, rowvar=False)
+eigenvalues, eigenvectors = np.linalg.eig(matrix)
+top = eigenvectors[:, :2]
+X_l = std.dot(top)
+
+# Plot the results
+plt.scatter(X_l[:, 0], X_l[:, 1], c=y)
+plt.title('Scatter Plot with Manual PCA')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.show()
+
+
+//K-MEANS
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+X = pd.read_csv("/content/kmeans.csv").values
+
+# Elbow Method to determine the optimal number of clusters
+wcss = [KMeans(i).fit(X).inertia_ for i in range(1, 11)]
+plt.plot(range(1, 11), wcss)
+plt.title('The Elbow Method')
+plt.xlabel('Number of clusters')
+plt.ylabel('WCSS')
+plt.show()
+
+# Apply KMeans with the optimal number of clusters
+model = KMeans(3)
+y_pred = model.fit_predict(X)
+
+plt.scatter(X[y_pred == 0, 0], X[y_pred == 0, 1], s = 100, c = 'red', label = 'Cluster 1')
+plt.scatter(X[y_pred == 1, 0], X[y_pred == 1, 1], s = 100, c = 'blue', label = 'Cluster 2')
+plt.scatter(X[y_pred == 2, 0], X[y_pred == 2, 1], s = 100, c = 'green', label = 'Cluster 3')
+
+plt.scatter(model.cluster_centers_[:, 0], model.cluster_centers_[:, 1], s = 300, c = 'yellow', label = 'Centroids')
+plt.title('Clusters of customers')
+plt.xlabel('Annual Income (k$)')
+plt.ylabel('Spending Score (1-100)')
+plt.legend()
+plt.show()
+
+
+//LOGISTIC REGRESSION
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+df = pd.read_csv("logistic regre.csv")
+df.columns = ['A', 'B', 'C']
+X = df[['A', 'B']].values
+y = df['C'].values
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+
+b0 = 0.0
+b1 = 0.0
+b2 = 0.0
+epoch = 10000
+alpha = 0.001
+
+while epoch > 0:
+    for i in range(len(X_train)):
+        p = 1 / (1 + np.exp(-(b0 + b1 * X_train[i, 0] + b2 * X_train[i, 1])))
+        b0 = b0 + alpha * (y_train[i] -p) * p * (1 - p) * 1.0
+        b1 = b1 + alpha * (y_train[i] - p) * p * (1 - p) * X_train[i, 0]
+        b2 = b2 + alpha * (y_train[i] - p) * p * (1 - p) * X_train[i, 1]
+        epoch = epoch - 1
+
+# Predictions on the test set
+y_pred = np.round(1 / (1 + np.exp(-(b0 + b1 * X_test[:, 0] + b2 * X_test[:, 1]))))
+
+print("Logistic Regression Parameters:")
+print(f"Coefficients (weights): {b1}, {b2}")
+print(f"Intercept: {b0}")
+
+accuracy = np.sum(y_test == y_pred) / len(y_test)
+print("Accuracy:", accuracy)
+
+//LINEAR REGRESSION
+import numpy as np
+import matplotlib.pyplot as plt
+
+file_path = 'linear regress.csv' # Replace with the actual file path
+
+
+data = np.genfromtxt(file_path, delimiter=',', skip_header=1)
+
+X = data[:, 0]
+y = data[:, 1]
+
+learning_rate = 0.01
+num_iterations = 1500
+
+m = 0
+c = 0
+
+m_samples = len(X)
+
+for _ in range(num_iterations):
+    y_pred = m * X + c
+    gradient_m = (-1/m_samples) * np.sum(X * (y - y_pred))
+    gradient_c = (-1/m_samples) * np.sum(y - y_pred)
+    m -= learning_rate * gradient_m
+    c -= learning_rate * gradient_c
+
+print(f'Linear Regression: y = {m}x + {c}')
+
+
+plt.scatter(X, y, label='Training Data')
+plt.plot(X, m * X + c, 'r', label='Linear Regression')
+plt.xlabel('Population of City in 10,000s')
+plt.ylabel('Profit in $10,000s')
+plt.legend()
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
